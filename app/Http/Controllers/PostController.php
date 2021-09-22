@@ -9,10 +9,16 @@ class PostController extends Controller
 {
     public function index() {
         // $posts = Post::get(); all
-        $posts = Post::with(['user', 'likes'])->paginate(5);
+        $posts = Post::latest()->with(['user', 'likes'])->paginate(5);
 
         return view('posts.index', [
             'posts' => $posts
+        ]);
+    }
+
+    public function show(Post $post) {
+        return view('posts.show', [
+            'post' => $post
         ]);
     }
 
@@ -36,6 +42,14 @@ class PostController extends Controller
         // ]);
 
         // Redirect to the last page
+        return back();
+    }
+
+    public function destroy(Post $post) {
+        $this->authorize('delete', $post);
+        
+        $post->delete();
+
         return back();
     }
 }
