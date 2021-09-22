@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\PostController;
+use App\Http\Controllers\PostLikeController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Auth\loginController;
 use App\Http\Controllers\Auth\logoutController;
@@ -11,9 +13,10 @@ Route::get('/', function() {
 })->name('home');
 
 // DASHBOARD
-Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+Route::get('/dashboard', [DashboardController::class, 'index'])
+->name('dashboard');
 
-Route::get('/logout', [LogoutController::class, 'store'])->name('logout');
+Route::post('/logout', [LogoutController::class, 'store'])->name('logout');
 
 // LOGIN
 Route::get('/login', [LoginController::class, 'index'])->name('login');
@@ -27,8 +30,8 @@ Route::get('/register', [RegisterController::class, 'index'])->name('register');
 //It will inherit the same route name from above line
 Route::post('/register', [RegisterController::class, 'store']);
 
-// POST
-Route::get('/posts', function () {
-    // return view('welcome');
-    return view('posts.index');
-});
+Route::get('/posts', [PostController::class, 'index'])->name('posts');
+Route::post('/posts', [PostController::class, 'store']);
+
+Route::post('/posts/{post}/likes', [PostLikeController::class, 'store'])->name('posts.likes');
+Route::delete('/posts/{post}/likes', [PostLikeController::class, 'destroy']);
